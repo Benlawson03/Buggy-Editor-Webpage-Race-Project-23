@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import os
 import sqlite3 as sql
+import json
 
 # app - The flask application where all the magical things are configured.
 app = Flask(__name__)
@@ -9,6 +10,29 @@ app = Flask(__name__)
 DATABASE_FILE = "database.db"
 DEFAULT_BUGGY_ID = "1"
 BUGGY_RACE_SERVER_URL = "https://rhul.buggyrace.net"
+JSON_FILE = "cs1999-defaults.json" # Path to JSON file
+
+# Load JSON file content
+with open(JSON_FILE, 'r') as f:
+    json_data = json.load(f)
+
+# Connect to SQLite database
+DATABASE_FILE = "database.db"
+con = sql.connect(DATABASE_FILE)
+cur = con.cursor()
+
+# Create a table to store JSON data
+cur.execute('''CREATE TABLE IF NOT EXISTS json_data (
+                id INTEGER PRIMARY KEY,
+                data TEXT
+            )''')
+
+# Insert JSON data into the table
+cur.execute("INSERT INTO json_data (data) VALUES (?)", (json.dumps(json_data),))
+con.commit()
+
+# Close connection
+con.close()
 
 #------------------------------------------------------------
 # the index page
@@ -51,12 +75,13 @@ def create_buggy():
 
 @app.route('/info', methods = ['POST', 'GET'])
 def info_buggy():
+    # Fetch data from SQLite database
     con = sql.connect(DATABASE_FILE)
     con.row_factory = sql.Row
     cur = con.cursor()
     cur.execute("SELECT * FROM buggies")
-    record = cur.fetchone(); 
-    return render_template("info.html", buggy = record)
+    record = cur.fetchone() 
+    return render_template("info.html", buggy=record)
 
     
 
@@ -98,6 +123,7 @@ def summary():
 
     buggies = dict(zip([column[0] for column in cur.description], cur.fetchone())).items() 
     return jsonify({ key: val for key, val in buggies if (val != "" and val is not None) })
+
 
 # You shouldn't need to add anything below this!
 if __name__ == '__main__':
