@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import os
 import sqlite3 as sql
+import json
 
 # app - The flask application where all the magical things are configured.
 app = Flask(__name__)
@@ -49,14 +50,9 @@ def create_buggy():
 # a page for displaying the info of the buggy
 #------------------------------------------------------------
 
-@app.route('/info', methods = ['POST', 'GET'])
-def info_buggy():
-    con = sql.connect(DATABASE_FILE)
-    con.row_factory = sql.Row
-    cur = con.cursor()
-    cur.execute("SELECT * FROM buggies")
-    record = cur.fetchone(); 
-    return render_template("info.html", buggy = record)
+@app.route('/info')
+def info():
+    return render_template('info.html', server_url=BUGGY_RACE_SERVER_URL)
 
     
 
