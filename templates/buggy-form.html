@@ -5,19 +5,30 @@
   <h1>Make buggy</h1>
 
   <form action="/new" method="post">
-    <label for="qty_wheels">Number of wheels:</label>
-    <input type="text" name="qty_wheels" />
-    <!-- Flag colour-->
-    <label for="flag_color">Flag_color:</label>
-    
-    <select name="flag_color" id="flag_color" style ="font-size:2-px;">
-      <option value="green">green</option>
-      <option value="green">red</option>
-      <option value="green">blue</option>
-      <option value="green">white</option>
-    </select>
+      <label for="qty_wheels">Number of wheels:</label>
+      <input type="text" name="qty_wheels" /><br>
 
-    <input type="submit" class="button">
+      <!-- Flag colour-->
+      <label for="flag_color">Flag_color:</label>
+      <select name="flag_color" id="flag_color" style ="font-size:2-px;">
+        <option value="green">green</option>
+        <option value="red">red</option>
+        <option value="blue">blue</option>
+        <option value="white">white</option>
+      </select>
+
+      <!-- Secondary flag colour-->
+      <label for="flag_color_secondary">Flag_color_secondary:</label>
+      <select name="flag_color_secondary" id="flag_color_secondary" style ="font-size:2-px;">
+        <option value="green">green</option>
+        <option value="red">red</option>
+        <option value="blue">blue</option>
+        <option value="white">white</option>
+      </select>
+      <input type="submit" class="button">
+
+
+  
 
 
 
