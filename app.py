@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import os
 import sqlite3 as sql
-import json
 
 # app - The flask application where all the magical things are configured.
 app = Flask(__name__)
@@ -30,13 +29,12 @@ def create_buggy():
     elif request.method == 'POST':
         msg=""
         qty_wheels = request.form['qty_wheels']
-        flag_color = request.form['flag_color'] #
         try:
             with sql.connect(DATABASE_FILE) as con:
                 cur = con.cursor()
                 cur.execute(
-                    "UPDATE buggies set qty_wheels=?, flag_color=? WHERE id=? ",
-                    (qty_wheels, flag_color, DEFAULT_BUGGY_ID)
+                    "UPDATE buggies set qty_wheels=? WHERE id=?",
+                    (qty_wheels, DEFAULT_BUGGY_ID)
                 )
                 con.commit()
                 msg = "Record successfully saved"
@@ -46,16 +44,6 @@ def create_buggy():
         finally:
             con.close()
         return render_template("updated.html", msg = msg)
-
-#------------------------------------------------------------
-# a page for displaying the info of the buggy
-#------------------------------------------------------------
-
-@app.route('/info')
-def info():
-    return render_template('info.html', server_url=BUGGY_RACE_SERVER_URL)
-
-    
 
 #------------------------------------------------------------
 # a page for displaying the buggy
@@ -98,5 +86,5 @@ def summary():
 
 # You shouldn't need to add anything below this!
 if __name__ == '__main__':
-    alloc_port = os.environ.get('CS1999_PORT') or 5001
+    alloc_port = os.environ.get('CS1999_PORT') or 5000
     app.run(debug=True, host="0.0.0.0", port=alloc_port)
