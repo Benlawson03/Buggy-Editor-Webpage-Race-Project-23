@@ -45,21 +45,30 @@ margin-bottom: 20px;
 <thead>
 <tr>
 <th>Attribute</th>
+<th>Item</th>
+<th>Cost</th>
 <th>Value</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
-{% for key, value in data2.items() %}
+{% for attribute, items in data2.items() %}
+{% for item, details in items.items() %}
 <tr>
-<td>{{ key }}</td>
-<td>{{ value }}</td>
+    <td>{{ attribute }}</td>
+    <td>{{ item }}</td>
+    <td>{{ details.cost }}</td>
+    <td>{{ details.value }}</td>
+    <td>{{ details.desc }}</td>
 </tr>
+{% endfor %}
 {% endfor %}
 </tbody>
 </table>
 </div>
 </body>
 </html>
+
 
 
 <a href="/" class="button">home</a>
