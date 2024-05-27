@@ -32,7 +32,8 @@ def create_buggy():
         cur = con.cursor()                                        #
         cur.execute("SELECT * FROM buggies")                      #
         record = cur.fetchone();                                  #
-        return render_template("buggy-form.html", buggy = record) # passes the data from data base into buggy-form
+        return render_template("buggy-form.html", buggy = record) # passes the data from database into
+#buggy-form (this sorts out all values in buggy form so dont worry about any of the requirements individually)
     elif request.method == 'POST':
         msg=""
         qty_wheels = request.form['qty_wheels'].strip()
@@ -87,7 +88,9 @@ def create_buggy():
 
 @app.route('/info')
 def info():
-    return render_template('info.html', server_url=BUGGY_RACE_SERVER_URL)
+    with open('defaults.json', 'r') as file:
+        data = json.load(file)
+    return render_template('info.html', data=data, server_url=BUGGY_RACE_SERVER_URL)    
 
     
 

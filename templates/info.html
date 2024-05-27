@@ -5,7 +5,36 @@
 
 <a href="https://rhul.buggyrace.net/specs/data?extra=mass" class="button">info</a><br><br><br>
 
-<a href="/" class="button">home</a>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON to HTML Table</title>
+</head>
+<body>
+<div id="table-container">
+<table border="1">
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+{% for key, value in data.items() %}
+<tr>
+<td>{{ key }}</td>
+<td>{{ value }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</body>
+</html>
+
+<a href="/" class="button">home</a>
 
 {% endblock %}
