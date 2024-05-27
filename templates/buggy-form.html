@@ -53,8 +53,25 @@
         <option value="steady">steady</option>
         <option value="titfortat">titfortat</option>
       </select><br><br>
+      <!--Error handling for wheels-->
       {% if error_qty_wheels %}
       <p style="color: red;">{{error_qty_wheels}}</p>
+      {% endif %}
+      <!--Error handling for flag colour-->
+      {% if error_flag_color %}
+      <p style="color: red;">{{ error_flag_color }}</p>
+      {% endif %}
+      <!--Error handling for secondary flag colour-->
+      {% if error_secondary_flag_color %}
+      <p style="color: red;">{{ error_secondary_flag_color }}</p>
+      {% endif %}
+      <!--Error handling for flag pattern-->
+      {% if error_flag_pattern %}
+      <p style="color: red;">{{ error_flag_pattern }}</p>
+      {% endif %}
+      <!--Error handling for Algo-->
+      {% if error_algo %}
+      <p style="color: red;">{{ error_algo }}</p>
       {% endif %}
     <input type="submit" class="button">
 

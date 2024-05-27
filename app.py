@@ -36,9 +36,29 @@ def create_buggy():
             # Render the form again with an error message
             return render_template("buggy-form.html", error_qty_wheels="Please enter an integer for the number of wheels")
         flag_color = request.form['flag_color'] ##
+        if flag_color == "--option--":
+            # Error handling: flag colour has not been chosen
+            error_flag_color = "Please select a valid flag color."
+            # Render the form again with an error message
+            return render_template("buggy-form.html", error_flag_color="Flag colour option has been left unchosen")     
         flag_color_secondary = request.form['flag_color_secondary']
+        if flag_color_secondary == "--option--":
+            # Error handling: secondary flag colour has not been chosen
+            error_secondary_flag_color = "Please select a valid flag color."
+            # Render the form again with an error message
+            return render_template("buggy-form.html", error_secondary_flag_color="Secondary flag colour option has been left unchosen")
         flag_pattern = request.form['flag_pattern']
+        if flag_pattern == "--option--":
+            # Error handling: flag colour has not been chosen
+            error_flag_pattern = "Please select a valid flag pattern."
+            # Render the form again with an error message
+            return render_template("buggy-form.html", error_flag_pattern="Flag pattern option has been left unchosen")
         algo = request.form['algo']
+        if algo == "--option--":
+            # Error handling: flag colour has not been chosen
+            error_algo = "Please select a valid algo."
+            # Render the form again with an error message
+            return render_template("buggy-form.html", error_algo="algo option has been left unchosen")
         try:#
             with sql.connect(DATABASE_FILE) as con:
                 cur = con.cursor()
