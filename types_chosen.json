@@ -1,0 +1,23 @@
+{
+"algo":
+{"steady": {"cost": 0,"desc": "The middle way: doesn't seek out attacks but makes them if opportunities present themselves","mass": 0}},
+
+"armour":
+{"aluminium":{"cost": 200,"desc": "Fairly strong but light","mass": 50}},
+
+"attack":
+{"spike":{"cost": 5,"desc": "A metal prong welded onto the superstructure","mass": 10}},
+
+"flag_pattern":
+{"plain":{"desc": "A plain field with no secondary colour"}},
+
+"power_type":
+{"petrol":{"cost": 4,"desc": "Petroleum-fuelled internal combustion engine","mass": 2}},
+
+"special":
+{"hamster_booster":{"cost": 5,"desc": "steroids for hamsters","mass": 1}},
+
+"tyres":
+{"knobbly":{"cost":15,"desc":"Great for off-roading","mass":20}}
+}
+  

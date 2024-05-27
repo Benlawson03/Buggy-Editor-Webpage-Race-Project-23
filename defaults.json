@@ -1,1 +1,21 @@
-{"algo":"steady","antibiotic":false,"armour":"none","attack":"none","aux_power_type":"none","aux_power_units":0,"banging":false,"fireproof":false,"flag_color":"white","flag_color_secondary":"black","flag_pattern":"plain","hamster_booster":0,"insulated":false,"power_type":"petrol","power_units":1,"qty_attacks":0,"qty_tyres":4,"qty_wheels":4,"tyres":"knobbly"}
+{
+"algo": "steady",
+"antibiotic": false,
+"armour": "aluminium",
+"attack": "spike",
+"aux_power_type": "none",
+"aux_power_units": 0,
+"banging": false,
+"fireproof": true,
+"flag_color": "red",
+"flag_color_secondary": "green",
+"flag_pattern": "hstripe",
+"hamster_booster": 1,
+"insulated": false,
+"power_type": "petrol",
+"power_units": 1,
+"qty_attacks": 1,
+"qty_tyres": 4,
+"qty_wheels": 4,
+"tyres": "knobbly"
+}
