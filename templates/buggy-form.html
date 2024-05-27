@@ -7,7 +7,7 @@
   <form action="/new" method="post">
       <label for="qty_wheels">Number of wheels:</label>
       <input type="text" name="qty_wheels" /><br><br>
-      <!-- Flag colour-->
+      <!--Flag colour-->
       <label for="flag_color">Flag_color:</label>
       
       <select name="flag_color" id="flag_color" style ="font-size:2-px;">
@@ -16,7 +16,7 @@
         <option value="blue">blue</option>
         <option value="white">white</option>
       </select><br><br>
-      <!-- Flag secondary colour-->
+      <!--Flag secondary colour-->
       <label for="flag_color_secondary">Flag color secondary:</label>
       
       <select name="flag_color_secondary" id="flag_color_secondary" style ="font-size:2-px;">
@@ -25,7 +25,7 @@
         <option value="blue">blue</option>
         <option value="white">white</option>
       </select><br><br>
-      <!-- Flag pattern-->
+      <!--Flag pattern-->
       <label for="flag_pattern">Flag pattern:</label>
       
       <select name="flag_pattern" id="flag_pattern" style ="font-size:2-px;">
@@ -35,6 +35,18 @@
         <option value="plain">plain</option>
         <option value="spot">spot</option>
         <option value="vstripe">vstripe</option>
+      </select><br><br>
+
+      <!--Algo-->
+      <label for="algo">Algo:</label>
+      
+      <select name="algo" id="algo" style ="font-size:2-px;">
+        <option value="buggy">buggy</option>
+        <option value="defensive">defensive</option>
+        <option value="offensive">offensive</option>
+        <option value="random">random</option>
+        <option value="steady">steady</option>
+        <option value="titfortat">titfortat</option>
       </select><br><br>
 
     <input type="submit" class="button">
