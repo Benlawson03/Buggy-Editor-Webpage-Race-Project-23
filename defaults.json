@@ -10,7 +10,7 @@
 "flag_color": "red",
 "flag_color_secondary": "green",
 "flag_pattern": "hstripe",
-"hamster_booster": 1,
+"hamster_booster": 0,
 "insulated": false,
 "power_type": "petrol",
 "power_units": 1,
