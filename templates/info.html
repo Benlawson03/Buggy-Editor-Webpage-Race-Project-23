@@ -11,11 +11,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JSON to HTML Table</title>
+<title>JSON to HTML Tables</title>
+<style>
+.table-container {
+display: flex;
+}
+.table-container table {
+border: 1px solid black;
+margin-right: 20px;
+}
+</style>
 </head>
 <body>
-<div id="table-container">
-<table border="1">
+<div class="table-container">
+<div>
+<h2>Defaults</h2>
+<table>
 <thead>
 <tr>
 <th>Attribute</th>
@@ -23,7 +34,7 @@
 </tr>
 </thead>
 <tbody>
-{% for key, value in data.items() %}
+{% for key, value in data1.items() %}
 <tr>
 <td>{{ key }}</td>
 <td>{{ value }}</td>
@@ -32,8 +43,29 @@
 </tbody>
 </table>
 </div>
+<div>
+<h2>Types</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+{% for key, value in data2.items() %}
+<tr>
+<td>{{ key }}</td>
+<td>{{ value }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
 </body>
 </html>
+
 
 <a href="/" class="button">home</a>
 

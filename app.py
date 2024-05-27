@@ -89,8 +89,10 @@ def create_buggy():
 @app.route('/info')
 def info():
     with open('defaults.json', 'r') as file:
-        data = json.load(file)
-    return render_template('info.html', data=data, server_url=BUGGY_RACE_SERVER_URL)    
+        data1 = json.load(file)
+    with open('types.json', 'r') as file:#
+        data2 = json.load(file)              #
+    return render_template('info.html', data1=data1, data2=data2, server_url=BUGGY_RACE_SERVER_URL)    
 
     
 
