@@ -6,11 +6,16 @@
 
   <form action="/new" method="post">
       <label for="qty_wheels">Number of wheels:</label>
-      <input type="text" name="qty_wheels" /><br><br>
+      <input type="text" name="qty_wheels" id="qty_wheels">
+      {% if error_qty_wheels %}
+        <p style="color: red;">{{error_qty_wheels}}</p>
+      {% endif %}
+      <br><br>
       <!--Flag colour-->
       <label for="flag_color">Flag_color:</label>
       
       <select name="flag_color" id="flag_color" style ="font-size:2-px;">
+        <option value="--option--">--option--</option>
         <option value="green">green</option>
         <option value="red">red</option>
         <option value="blue">blue</option>
@@ -20,6 +25,7 @@
       <label for="flag_color_secondary">Flag color secondary:</label>
       
       <select name="flag_color_secondary" id="flag_color_secondary" style ="font-size:2-px;">
+        <option value="--option--">--option--</option>
         <option value="green">green</option>
         <option value="red">red</option>
         <option value="blue">blue</option>
@@ -29,6 +35,7 @@
       <label for="flag_pattern">Flag pattern:</label>
       
       <select name="flag_pattern" id="flag_pattern" style ="font-size:2-px;">
+        <option value="--option--">--option--</option>
         <option value="check">check</option>
         <option value="dstripe">dstripe</option>
         <option value="hstripe">hstripe</option>
@@ -41,6 +48,7 @@
       <label for="algo">Algo:</label>
       
       <select name="algo" id="algo" style ="font-size:2-px;">
+        <option value="--option--">--option--</option>
         <option value="buggy">buggy</option>
         <option value="defensive">defensive</option>
         <option value="offensive">offensive</option>

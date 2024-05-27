@@ -29,7 +29,12 @@ def create_buggy():
         return render_template("buggy-form.html")
     elif request.method == 'POST':
         msg=""
-        qty_wheels = request.form['qty_wheels']
+        qty_wheels = request.form['qty_wheels'].strip()
+        if not qty_wheels.isdigit():
+            # Error handling: qty_wheels is not a valid integer
+            error_msg = "Number of wheels must be a valid integer."
+            # Render the form again with an error message
+            return render_template("buggy-form.html", error_qty_wheels=qty_wheels)
         flag_color = request.form['flag_color'] ##
         flag_color_secondary = request.form['flag_color_secondary']
         flag_pattern = request.form['flag_pattern']
