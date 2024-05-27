@@ -6,12 +6,13 @@
 
   <form action="/new" method="post">
       <label for="qty_wheels">Number of wheels:</label>
-      <input type="text" name="qty_wheels" id="qty_wheels">
+      <input type="text" value='{{ buggy['qty_wheels'] }}' name="qty_wheels" id="qty_wheels">
       <br><br>
       <!--Flag colour-->
       <label for="flag_color">Flag_color:</label>
       
       <select name="flag_color" id="flag_color" style ="font-size:2-px;">
+        <option value='{{ buggy['flag_color'] }}'>{{ buggy['flag_color'] }}</option>
         <option value="--option--">--option--</option>
         <option value="green">green</option>
         <option value="red">red</option>
@@ -22,6 +23,7 @@
       <label for="flag_color_secondary">Flag color secondary:</label>
       
       <select name="flag_color_secondary" id="flag_color_secondary" style ="font-size:2-px;">
+        <option value='{{ buggy['flag_color_secondary'] }}'>{{ buggy['flag_color_secondary'] }}</option>
         <option value="--option--">--option--</option>
         <option value="green">green</option>
         <option value="red">red</option>
@@ -32,6 +34,7 @@
       <label for="flag_pattern">Flag pattern:</label>
       
       <select name="flag_pattern" id="flag_pattern" style ="font-size:2-px;">
+        <option value='{{ buggy['flag_pattern'] }}'>{{ buggy['flag_pattern'] }}</option>
         <option value="--option--">--option--</option>
         <option value="check">check</option>
         <option value="dstripe">dstripe</option>
@@ -45,6 +48,7 @@
       <label for="algo">Algo:</label>
       
       <select name="algo" id="algo" style ="font-size:2-px;">
+        <option value='{{ buggy['algo'] }}'>{{ buggy['algo'] }}</option>
         <option value="--option--">--option--</option>
         <option value="buggy">buggy</option>
         <option value="defensive">defensive</option>
