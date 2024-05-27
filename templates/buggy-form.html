@@ -7,9 +7,6 @@
   <form action="/new" method="post">
       <label for="qty_wheels">Number of wheels:</label>
       <input type="text" name="qty_wheels" id="qty_wheels">
-      {% if error_qty_wheels %}
-        <p style="color: red;">{{error_qty_wheels}}</p>
-      {% endif %}
       <br><br>
       <!--Flag colour-->
       <label for="flag_color">Flag_color:</label>
@@ -56,7 +53,9 @@
         <option value="steady">steady</option>
         <option value="titfortat">titfortat</option>
       </select><br><br>
-
+      {% if error_qty_wheels %}
+      <p style="color: red;">{{error_qty_wheels}}</p>
+      {% endif %}
     <input type="submit" class="button">
 
 

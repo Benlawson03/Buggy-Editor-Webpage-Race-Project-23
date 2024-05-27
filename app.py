@@ -34,7 +34,7 @@ def create_buggy():
             # Error handling: qty_wheels is not a valid integer
             error_msg = "Number of wheels must be a valid integer."
             # Render the form again with an error message
-            return render_template("buggy-form.html", error_qty_wheels=qty_wheels)
+            return render_template("buggy-form.html", error_qty_wheels="Please enter an integer for the number of wheels")
         flag_color = request.form['flag_color'] ##
         flag_color_secondary = request.form['flag_color_secondary']
         flag_pattern = request.form['flag_pattern']
