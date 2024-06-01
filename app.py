@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
 def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo):
     # Define cost rules
-    wheel_cost = 10    # example cost per wheel
+    wheel_cost = 100    # example cost per wheel
     color_cost = 5   # example cost for flag color
     pattern_cost = 20  # example cost for flag pattern
     algo_cost = 50  # example cost for algo
