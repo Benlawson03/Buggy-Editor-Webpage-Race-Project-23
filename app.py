@@ -11,6 +11,36 @@ DATABASE_FILE = "database.db"
 DEFAULT_BUGGY_ID = "1"
 BUGGY_RACE_SERVER_URL = "https://rhul.buggyrace.net"
 
+def init_db():
+    with sql.connect(DATABASE_FILE) as con:
+        cur = con.cursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS buggies (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            qty_wheels INTEGER,
+            flag_color TEXT,
+            flag_color_secondary TEXT,
+            flag_pattern TEXT,
+            algo TEXT,
+            total_cost INTEGER
+        )''')
+        con.commit()
+
+if __name__ == "__main__":
+    init_db()
+
+
+def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo):
+    # Define cost rules
+    wheel_cost = 10    # example cost per wheel
+    color_cost = 5   # example cost for flag color
+    pattern_cost = 20  # example cost for flag pattern
+    algo_cost = 50  # example cost for algo
+
+    # Calculate total cost
+    total_cost = (int(qty_wheels) * wheel_cost) + color_cost + pattern_cost + algo_cost
+    return total_cost
+
+
 #------------------------------------------------------------
 # the index page
 #------------------------------------------------------------
@@ -23,64 +53,73 @@ def home():
 #  if it's a POST request process the submitted data
 #  but if it's a GET request, just show the form
 #------------------------------------------------------------
-@app.route('/new', methods = ['POST', 'GET'])
+@app.route('/new', methods=['POST', 'GET']) 
 def create_buggy():
     if request.method == 'GET':
-
-        con = sql.connect(DATABASE_FILE)                          #
-        con.row_factory = sql.Row                                 #
-        cur = con.cursor()                                        #
-        cur.execute("SELECT * FROM buggies")                      #
-        record = cur.fetchone();                                  #
-        return render_template("buggy-form.html", buggy = record) # passes the data from database into
-#buggy-form (this sorts out all values in buggy form so dont worry about any of the requirements individually)
+        with sql.connect(DATABASE_FILE) as con:
+            con.row_factory = sql.Row
+            cur = con.cursor()
+            cur.execute("SELECT * FROM buggies WHERE id=?", (DEFAULT_BUGGY_ID,))
+            record = cur.fetchone()
+            if record:
+                return render_template("buggy-form.html", buggy=record)
+            else:
+                return render_template("buggy-form.html", buggy={})
     elif request.method == 'POST':
-        msg=""
+        error_messages = {}
         qty_wheels = request.form['qty_wheels'].strip()
-        if not qty_wheels.isdigit():
-            # Error handling: qty_wheels is not a valid integer
-            error_msg = "Number of wheels must be a valid integer."
-            # Render the form again with an error message
-            return render_template("buggy-form.html", error_qty_wheels="Please enter an integer for the number of wheels")
-        flag_color = request.form['flag_color'] ##
-        if flag_color == "--option--":
-            # Error handling: flag colour has not been chosen
-            error_flag_color = "Please select a valid flag color."
-            # Render the form again with an error message
-            return render_template("buggy-form.html", error_flag_color="Flag colour option has been left unchosen")     
+        flag_color = request.form['flag_color']
         flag_color_secondary = request.form['flag_color_secondary']
-        if flag_color_secondary == "--option--":
-            # Error handling: secondary flag colour has not been chosen
-            error_secondary_flag_color = "Please select a valid flag color."
-            # Render the form again with an error message
-            return render_template("buggy-form.html", error_secondary_flag_color="Secondary flag colour option has been left unchosen")
         flag_pattern = request.form['flag_pattern']
-        if flag_pattern == "--option--":
-            # Error handling: flag colour has not been chosen
-            error_flag_pattern = "Please select a valid flag pattern."
-            # Render the form again with an error message
-            return render_template("buggy-form.html", error_flag_pattern="Flag pattern option has been left unchosen")
         algo = request.form['algo']
+
+        if not qty_wheels.isdigit():
+            error_messages['error_qty_wheels'] = "Please enter an integer for the number of wheels"
+        
+        if flag_color == "--option--":
+            error_messages['error_flag_color'] = "Flag colour option has been left unchosen"
+        
+        if flag_color_secondary == "--option--":
+            error_messages['error_secondary_flag_color'] = "Secondary flag colour option has been left unchosen"
+        
+        if flag_pattern == "--option--":
+            error_messages['error_flag_pattern'] = "Flag pattern option has been left unchosen"
+        
         if algo == "--option--":
-            # Error handling: flag colour has not been chosen
-            error_algo = "Please select a valid algo."
-            # Render the form again with an error message
-            return render_template("buggy-form.html", error_algo="algo option has been left unchosen")
-        try:#
+            error_messages['error_algo'] = "Algo option has been left unchosen"
+        
+        if error_messages:
+            return render_template("buggy-form.html", **error_messages, buggy=request.form)
+
+        # Calculate the cost of the buggy
+        try:
+            total_cost = calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo)
+        except Exception as e:
+            return render_template("buggy-form.html", error_calculation=f"Error calculating cost: {str(e)}", buggy=request.form)
+
+        try:
             with sql.connect(DATABASE_FILE) as con:
                 cur = con.cursor()
                 cur.execute(
-                    "UPDATE buggies set qty_wheels=?, flag_color=?, flag_color_secondary=?, flag_pattern=?, algo=? WHERE id=? ",
-                    (qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, DEFAULT_BUGGY_ID)
+                    """UPDATE buggies 
+                    SET qty_wheels=?, flag_color=?, flag_color_secondary=?, flag_pattern=?, algo=?, total_cost=? 
+                    WHERE id=?""",
+                    (qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, total_cost, DEFAULT_BUGGY_ID)
                 )
                 con.commit()
                 msg = "Record successfully saved"
-        except:
+        except Exception as e:
             con.rollback()
-            msg = "error in update operation"
+            msg = f"Error in update operation: {str(e)}"
         finally:
             con.close()
-        return render_template("updated.html", msg = msg)
+
+        return render_template("updated.html", msg=msg)
+
+
+
+
+
 
 #------------------------------------------------------------
 # a page for displaying the info of the buggy
@@ -101,12 +140,18 @@ def info():
 #------------------------------------------------------------
 @app.route('/buggy')
 def show_buggies():
-    con = sql.connect(DATABASE_FILE)
-    con.row_factory = sql.Row
-    cur = con.cursor()
-    cur.execute("SELECT * FROM buggies")
-    record = cur.fetchone(); 
-    return render_template("buggy.html", buggy = record)
+    with sql.connect(DATABASE_FILE) as con:
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT * FROM buggies WHERE id=?", (DEFAULT_BUGGY_ID,))
+        record = cur.fetchone()
+        if record:
+            return render_template("buggy.html", buggy=record)
+        else:
+            return render_template("buggy.html", buggy={})
+
+
+
 
 #------------------------------------------------------------
 # a placeholder page for editing the buggy: you'll need
@@ -127,15 +172,17 @@ def edit_buggy():
 #------------------------------------------------------------
 @app.route('/json')
 def summary():
-    con = sql.connect(DATABASE_FILE)
-    con.row_factory = sql.Row
-    cur = con.cursor()
-    cur.execute("SELECT * FROM buggies WHERE id=? LIMIT 1", (DEFAULT_BUGGY_ID))
+    with sql.connect(DATABASE_FILE) as con:
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT * FROM buggies WHERE id=? LIMIT 1", (DEFAULT_BUGGY_ID,))
+        record = cur.fetchone()
+        if record:
+            buggies = dict(record)
+            return jsonify({key: val for key, val in buggies.items() if val != "" and val is not None})
+        else:
+            return jsonify({})
 
-    buggies = dict(zip([column[0] for column in cur.description], cur.fetchone())).items() 
-    return jsonify({ key: val for key, val in buggies if (val != "" and val is not None) })
-
-# You shouldn't need to add anything below this!
 if __name__ == '__main__':
     alloc_port = os.environ.get('CS1999_PORT') or 5001
     app.run(debug=True, host="0.0.0.0", port=alloc_port)

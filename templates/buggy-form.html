@@ -6,13 +6,13 @@
 
   <form action="/new" method="post">
       <label for="qty_wheels">Number of wheels:</label>
-      <input type="text" value='{{ buggy['qty_wheels'] }}' name="qty_wheels" id="qty_wheels">
+      <input type="text" value='{{ buggy['qty_wheels']|default('') }}' name="qty_wheels" id="qty_wheels">
       <br><br>
       <!--Flag colour-->
       <label for="flag_color">Flag_color:</label>
       
-      <select name="flag_color" id="flag_color" style ="font-size:2-px;">
-        <option value='{{ buggy['flag_color'] }}'>{{ buggy['flag_color'] }}</option>
+      <select name="flag_color" id="flag_color" style="font-size:20px;">
+        <option value='{{ buggy['flag_color']|default('--option--') }}'>{{ buggy['flag_color']|default('--option--') }}</option>
         <option value="--option--">--option--</option>
         <option value="green">green</option>
         <option value="red">red</option>
@@ -22,8 +22,8 @@
       <!--Flag secondary colour-->
       <label for="flag_color_secondary">Flag color secondary:</label>
       
-      <select name="flag_color_secondary" id="flag_color_secondary" style ="font-size:2-px;">
-        <option value='{{ buggy['flag_color_secondary'] }}'>{{ buggy['flag_color_secondary'] }}</option>
+      <select name="flag_color_secondary" id="flag_color_secondary" style="font-size:20px;">
+        <option value='{{ buggy['flag_color_secondary']|default('--option--') }}'>{{ buggy['flag_color_secondary']|default('--option--') }}</option>
         <option value="--option--">--option--</option>
         <option value="green">green</option>
         <option value="red">red</option>
@@ -33,8 +33,8 @@
       <!--Flag pattern-->
       <label for="flag_pattern">Flag pattern:</label>
       
-      <select name="flag_pattern" id="flag_pattern" style ="font-size:2-px;">
-        <option value='{{ buggy['flag_pattern'] }}'>{{ buggy['flag_pattern'] }}</option>
+      <select name="flag_pattern" id="flag_pattern" style="font-size:20px;">
+        <option value='{{ buggy['flag_pattern']|default('--option--') }}'>{{ buggy['flag_pattern']|default('--option--') }}</option>
         <option value="--option--">--option--</option>
         <option value="check">check</option>
         <option value="dstripe">dstripe</option>
@@ -47,8 +47,8 @@
       <!--Algo-->
       <label for="algo">Algo:</label>
       
-      <select name="algo" id="algo" style ="font-size:2-px;">
-        <option value='{{ buggy['algo'] }}'>{{ buggy['algo'] }}</option>
+      <select name="algo" id="algo" style="font-size:20px;">
+        <option value='{{ buggy['algo']|default('--option--') }}'>{{ buggy['algo']|default('--option--') }}</option>
         <option value="--option--">--option--</option>
         <option value="buggy">buggy</option>
         <option value="defensive">defensive</option>
@@ -77,11 +77,11 @@
       {% if error_algo %}
       <p style="color: red;">{{ error_algo }}</p>
       {% endif %}
+      <!--Error handling for calculation-->
+      {% if error_calculation %}
+      <p style="color: red;">{{ error_calculation }}</p>
+      {% endif %}
     <input type="submit" class="button">
-
-
-
-
   </form>
 
   <p>

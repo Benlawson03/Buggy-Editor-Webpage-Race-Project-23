@@ -4,6 +4,7 @@
 
   <h1>Buggy</h1>
 
+  {% if buggy %}
   <table>
     <tr>
       <td>ID:</td> <td> {{ buggy['id'] }} </td>
@@ -24,9 +25,12 @@
       <td>Algo:</td> <td> {{ buggy['algo'] }} </td>
     </tr>
     <tr>
-      <td>Cost of buggy:</td> <td> {{ buggy['cost_of_buggy'] }} </td>
+      <td>Total cost:</td> <td> {{ buggy['total_cost'] }} </td>
     </tr>
   </table>
+  {% else %}
+  <p>No buggy data available.</p>
+  {% endif %}
 
   <p>
     <a href="/" class="button">home</a>
