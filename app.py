@@ -11,8 +11,6 @@ DATABASE_FILE = "database.db"
 DEFAULT_BUGGY_ID = "1"
 BUGGY_RACE_SERVER_URL = "https://rhul.buggyrace.net"
 
-<<<<<<< Updated upstream
-=======
 def init_db():
     with sql.connect(DATABASE_FILE) as con:
         cur = con.cursor()
@@ -43,7 +41,6 @@ def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, a
     return total_cost
 
 
->>>>>>> Stashed changes
 #------------------------------------------------------------
 # the index page
 #------------------------------------------------------------
