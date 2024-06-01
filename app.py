@@ -38,6 +38,7 @@ if __name__ == "__main__":
 def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour, attack, power_type, special, tyres):
     # Load the cost data
     cost_data = {
+        "algo": {...},
         "armour": {...},
         "attack": {...},
         "flag_pattern": {...},
