@@ -6,13 +6,13 @@
 
   <form action="/new" method="post">
       <label for="qty_wheels">Number of wheels:</label>
-      <input type="text" value='{{ buggy['qty_wheels']|default('') }}' name="qty_wheels" id="qty_wheels">
+      <input type="text" value='{{ buggy['qty_wheels'] }}' name="qty_wheels" id="qty_wheels">
       <br><br>
       <!--Flag colour-->
       <label for="flag_color">Flag_color:</label>
       
-      <select name="flag_color" id="flag_color" style="font-size:20px;">
-        <option value='{{ buggy['flag_color']|default('--option--') }}'>{{ buggy['flag_color']|default('--option--') }}</option>
+      <select name="flag_color" id="flag_color" style ="font-size:2-px;">
+        <option value='{{ buggy['flag_color'] }}'>{{ buggy['flag_color'] }}</option>
         <option value="--option--">--option--</option>
         <option value="green">green</option>
         <option value="red">red</option>
@@ -22,8 +22,8 @@
       <!--Flag secondary colour-->
       <label for="flag_color_secondary">Flag color secondary:</label>
       
-      <select name="flag_color_secondary" id="flag_color_secondary" style="font-size:20px;">
-        <option value='{{ buggy['flag_color_secondary']|default('--option--') }}'>{{ buggy['flag_color_secondary']|default('--option--') }}</option>
+      <select name="flag_color_secondary" id="flag_color_secondary" style ="font-size:2-px;">
+        <option value='{{ buggy['flag_color_secondary'] }}'>{{ buggy['flag_color_secondary'] }}</option>
         <option value="--option--">--option--</option>
         <option value="green">green</option>
         <option value="red">red</option>
@@ -33,8 +33,8 @@
       <!--Flag pattern-->
       <label for="flag_pattern">Flag pattern:</label>
       
-      <select name="flag_pattern" id="flag_pattern" style="font-size:20px;">
-        <option value='{{ buggy['flag_pattern']|default('--option--') }}'>{{ buggy['flag_pattern']|default('--option--') }}</option>
+      <select name="flag_pattern" id="flag_pattern" style ="font-size:2-px;">
+        <option value='{{ buggy['flag_pattern'] }}'>{{ buggy['flag_pattern'] }}</option>
         <option value="--option--">--option--</option>
         <option value="check">check</option>
         <option value="dstripe">dstripe</option>
@@ -43,12 +43,11 @@
         <option value="spot">spot</option>
         <option value="vstripe">vstripe</option>
       </select><br><br>
-
       <!--Algo-->
       <label for="algo">Algo:</label>
       
-      <select name="algo" id="algo" style="font-size:20px;">
-        <option value='{{ buggy['algo']|default('--option--') }}'>{{ buggy['algo']|default('--option--') }}</option>
+      <select name="algo" id="algo" style ="font-size:2-px;">
+        <option value="{{ buggy['algo'] }}">{{ buggy['algo'] }}</option>
         <option value="--option--">--option--</option>
         <option value="buggy">buggy</option>
         <option value="defensive">defensive</option>
@@ -57,31 +56,131 @@
         <option value="steady">steady</option>
         <option value="titfortat">titfortat</option>
       </select><br><br>
+      <!--Armour-->
+      <label for="armour">Armour:</label>
+      
+      <select name="armour" id="armour" style="font-size:2-px;">
+        <option value="{{ buggy['armour'] }}">{{ buggy['armour'] }}</option>
+        <option value="--option--">--option--</option>
+        <option value="aluminium">aluminium</option>
+        <option value="none">none</option>
+        <option value="thicksteel">thicksteel</option>
+        <option value="thinsteel">thinsteel</option>
+        <option value="titanium">titanium</option>
+        <option value="wood">wood</option>
+      </select><br><br>
+      
+      <!--Attack-->
+      <label for="attack">Attack:</label>
+      
+      <select name="attack" id="attack" style="font-size:2-px;">
+        <option value="{{ buggy['attack'] }}">{{ buggy['attack'] }}</option>
+        <option value="--option--">--option--</option>
+        <option value="biohazard">biohazard</option>
+        <option value="charge">charge</option>
+        <option value="flame">flame</option>
+        <option value="none">none</option>
+        <option value="spike">spike</option>
+      </select><br><br>
+      
+      <!--Power_type-->
+      <label for="power_type">Power type:</label>
+      
+      <select name="power_type" id="power_type" style ="font-size:2-px;">
+        <option value='{{ buggy['Power type'] }}'>{{ buggy['power_type'] }}</option>
+        <option value="--option--">--option--</option>
+        <option value="bio">bio</option>
+        <option value="electric">electric</option>
+        <option value="fusion">fusion</option>
+        <option value="hamster">hamster</option>
+        <option value="none">none</option>
+        <option value="petrol">petrol</option>
+        <option value="rocket">rocket</option>
+        <option value="solar">solar</option>
+        <option value="steam">steam</option>
+        <option value="thermo">thermo</option>
+        <option value="wind">wind</option>
+      </select><br><br>
+      <!--Special-->
+      <label for="special">Special:</label>
+
+      <select name="special" id="special" style="font-size:2-px;">
+          <option value='{{ buggy['special'] }}'>{{ buggy['special'] }}</option>
+          <option value="--option--">--option--</option>
+          <option value="antibiotic">antibiotic</option>
+          <option value="banging">banging</option>
+          <option value="fireproof">fireproof</option>
+          <option value="hamster_booster">hamster_booster</option>
+          <option value="insulated">insulated</option>
+      </select><br><br>
+      <!--Tyres-->
+      <label for="tyres">Tyres:</label>
+      
+      <select name="tyres" id="tyres" style ="font-size:2-px;">
+        <option value='{{ buggy['Tyres'] }}'>{{ buggy['tyres'] }}</option>
+        <option value="--option--">--option--</option>
+        <option value="knobbly">knobbly</option>
+        <option value="maglev">maglev</option>
+        <option value="reactive">reactive</option>
+        <option value="slick">slick</option>
+        <option value="steelband">steelband</option>
+      </select><br><br>
+
       <!--Error handling for wheels-->
       {% if error_qty_wheels %}
       <p style="color: red;">{{error_qty_wheels}}</p>
       {% endif %}
+
       <!--Error handling for flag colour-->
       {% if error_flag_color %}
       <p style="color: red;">{{ error_flag_color }}</p>
       {% endif %}
+
       <!--Error handling for secondary flag colour-->
       {% if error_secondary_flag_color %}
       <p style="color: red;">{{ error_secondary_flag_color }}</p>
       {% endif %}
+
       <!--Error handling for flag pattern-->
       {% if error_flag_pattern %}
       <p style="color: red;">{{ error_flag_pattern }}</p>
       {% endif %}
+
       <!--Error handling for Algo-->
       {% if error_algo %}
       <p style="color: red;">{{ error_algo }}</p>
       {% endif %}
-      <!--Error handling for calculation-->
-      {% if error_calculation %}
-      <p style="color: red;">{{ error_calculation }}</p>
+
+      <!-- Error handling for Armour -->
+      {% if error_armour %}
+      <p style="color: red;">{{ error_armour }}</p>
       {% endif %}
+
+      <!-- Error handling for Attack -->
+      {% if error_attack %}
+      <p style="color: red;">{{ error_attack }}</p>
+      {% endif %}
+
+      <!-- Error handling for Power type -->
+      {% if error_power_type %}
+      <p style="color: red;">{{ error_power_type }}</p>
+      {% endif %}
+
+      <!-- Error handling for Special -->
+      {% if error_special %}
+      <p style="color: red;">{{ error_special }}</p>
+      {% endif %}
+
+      <!-- Error handling for Tyres -->
+      {% if error_tyres %}
+      <p style="color: red;">{{ error_tyres }}</p>
+      {% endif %}
+
     <input type="submit" class="button">
+
+
+
+
   </form>
 
   <p>
