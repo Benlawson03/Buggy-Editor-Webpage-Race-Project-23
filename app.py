@@ -11,6 +11,39 @@ DATABASE_FILE = "database.db"
 DEFAULT_BUGGY_ID = "1"
 BUGGY_RACE_SERVER_URL = "https://rhul.buggyrace.net"
 
+<<<<<<< Updated upstream
+=======
+def init_db():
+    with sql.connect(DATABASE_FILE) as con:
+        cur = con.cursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS buggies (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            qty_wheels INTEGER,
+            flag_color TEXT,
+            flag_color_secondary TEXT,
+            flag_pattern TEXT,
+            algo TEXT,
+            total_cost INTEGER
+        )''')
+        con.commit()
+
+if __name__ == "__main__":
+    init_db()
+
+
+def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo):
+    # Define cost rules
+    wheel_cost = 100    # example cost per wheel
+    color_cost = 50   # example cost for flag color
+    pattern_cost = 20  # example cost for flag pattern
+    algo_cost = 50  # example cost for algo
+
+    # Calculate total cost
+    total_cost = (int(qty_wheels) * wheel_cost) + color_cost + pattern_cost + algo_cost
+    return total_cost
+
+
+>>>>>>> Stashed changes
 #------------------------------------------------------------
 # the index page
 #------------------------------------------------------------
