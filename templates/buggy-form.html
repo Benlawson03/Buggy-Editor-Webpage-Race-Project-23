@@ -8,8 +8,21 @@
       <label for="qty_wheels">Number of wheels:</label>
       <input type="text" value='{{ buggy['qty_wheels']|default('') }}' name="qty_wheels" id="qty_wheels">
       <br><br>
+      <label for="qty_tyres">Number of tyres:</label>
+      <input type="text" value='{{ buggy['qty_tyres']|default('') }}' name="qty_tyres" id="qty_tyres">
+      <br><br>
+      <label for="qty_attacks">Number of attacks:</label>
+      <input type="text" value='{{ buggy['qty_attacks']|default('') }}' name="qty_attacks" id="qty_attacks">
+      <br><br>
+      <label for="power_units">Power units:</label>
+      <input type="text" value='{{ buggy['power_units']|default('') }}' name="power_units" id="power_units">
+      <br><br>
+      <label for="aux_power_units">Aux power units:</label>
+      <input type="text" value='{{ buggy['aux_power_units']|default('') }}' name="aux_power_units" id="aux_power_units">
+      <br><br>
       <!--Flag colour-->
       <label for="flag_color">Flag_color:</label>
+      
       
       <select name="flag_color" id="flag_color" style="font-size:20px;">
         <option value='{{ buggy['flag_color']|default('--option--') }}'>{{ buggy['flag_color']|default('--option--') }}</option>

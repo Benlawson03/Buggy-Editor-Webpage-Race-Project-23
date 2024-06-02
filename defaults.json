@@ -3,7 +3,7 @@
 "antibiotic": false,
 "armour": "aluminium",
 "attack": "spike",
-"aux_power_type": "none",
+"aux_power_type": "none", -------------------
 "aux_power_units": 0,
 "banging": false,
 "fireproof": true,

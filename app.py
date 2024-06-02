@@ -30,6 +30,7 @@ def init_db():
             power_type TEXT,
             special TEXT,
             tyres TEXT,
+            
             total_cost INTEGER
         )''')
         con.commit()
