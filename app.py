@@ -31,13 +31,32 @@ if __name__ == "__main__":
 
 def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo):
     # Define cost rules
-    wheel_cost = 100    # example cost per wheel
-    color_cost = 50   # example cost for flag color
-    pattern_cost = 20  # example cost for flag pattern
-    algo_cost = 50  # example cost for algo
+    wheel_cost = 0    # example cost per wheel
+    color_cost = 0   # example cost for flag color
+    pattern_cost = 0  # example cost for flag pattern
+    algo_cost = 0  # example cost for algo
+    qty_tyres = 0
+    power_units = 0
+    aux_power_units = 0
+    
+    # Get costs from JSON data
+    algo_cost = types_data["algo"][algo]["cost"]
+    armour_cost = types_data["armour"][armour]["cost"]
+    attack_cost = types_data["attack"][attack]["cost"]
+    power_type_cost = types_data["power_type"][power_type]["cost"]
+    aux_power_type_cost = types_data["power_type"][aux_power_type]["cost"] ## Aux is only the same as power type as its the same cost
+    special_cost = types_data["special"][special]["cost"]
+    tyres_cost = types_data["tyres"][tyres]["cost"]
 
-    # Calculate total cost
-    total_cost = (int(qty_wheels) * wheel_cost) + color_cost + pattern_cost + algo_cost
+# Calculate total cost
+    total_cost = (
+        (int(qty_wheels) * wheel_cost) +
+        (int(qty_attacks) * attack_cost) +
+        (int(tyres_cost) * int(qty_tyres)) +
+        (int(power_type_cost) * int(power_units)) +
+        (int(aux_power_type_cost) * int(aux_power_units)) +
+        color_cost + pattern_cost + algo_cost + armour_cost + special_cost
+    )
     return total_cost
 
 
@@ -67,6 +86,21 @@ def create_buggy():
     elif request.method == 'POST':
         msg=""
         qty_wheels = request.form['qty_wheels'].strip()
+        flag_color = request.form['flag_color']
+        flag_color_secondary = request.form['flag_color_secondary']
+        flag_pattern = request.form['flag_pattern']
+        algo = request.form['algo']
+        armour = request.form['armour']
+        attack = request.form['attack']
+        power_type = request.form['power_type']
+        aux_power_type = request.form['aux_power_type']
+        special = request.form['special']
+        tyres = request.form['tyres']
+        qty_tyres = request.form['qty_tyres']
+        qty_attacks = request.form['qty_attacks']
+        power_units = request.form['power_units']
+        aux_power_units = request.form['aux_power_units']
+        
         if not qty_wheels.isdigit():
             # Error handling: qty_wheels is not a valid integer
             error_msg = "Number of wheels must be a valid integer."
@@ -92,22 +126,59 @@ def create_buggy():
             return render_template("buggy-form.html", error_flag_pattern="Flag pattern option has been left unchosen")
         algo = request.form['algo']
         if algo == "--option--":
-            # Error handling: flag colour has not been chosen
-            error_algo = "Please select a valid algo."
-            # Render the form again with an error message
-            return render_template("buggy-form.html", error_algo="algo option has been left unchosen")
-        try:#
+            error_messages['error_algo'] = "Algo option has been left unchosen"
+            
+        if armour == "--option--":
+            error_messages['error_armour'] = "Armour option has been left unchosen"
+            
+        if attack == "--option--":
+            error_messages['error_attack'] = "Attack option has been left unchosen"
+            
+        if power_type == "--option--":
+            error_messages['error_power_type'] = "Power type option has been left unchosen"
+            
+        if aux_power_type == "--option--":
+             error_messages['error_aux_power_type'] = "Aux power type option has been left unchosen"
+
+        if special == "--option--":
+            error_messages['error_special'] = "Sepcial option has been left unchosen"
+            
+        if tyres == "--option--":
+            error_messages['error_tyres'] = "Tyres option has been left unchosen"
+            
+        if qty_tyres == "--option--":
+            error_messages['error_qty_tyres'] = "Numbers of tyres option has been left unchosen"
+
+        if qty_attacks == "--option--":
+            error_messages['error_qty_attacks'] = "Number of attacks option has been left unchosen"
+        
+        if power_units == "--option--":
+            error_messages['error_power_units'] = "Power units option has been left unchosen"
+
+        if aux_power_units == "--option--":
+            error_messages['error_aux_power_untis'] = "Aux power units option has been left unchosen"
+        
+        if error_messages:
+            return render_template("buggy-form.html", **error_messages, buggy=request.form)
+
+        # Calculate the cost of the buggy
+        try:
+            total_cost = calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour, attack, power_type, aux_power_type, special, tyres, qty_tyres, qty_attacks, power_units, aux_power_units)
+        except Exception as e:
+            return render_template("buggy-form.html", error_calculation=f"Error calculating cost: {str(e)}", buggy=request.form)
+
+        try:
             with sql.connect(DATABASE_FILE) as con:
                 cur = con.cursor()
                 cur.execute(
                     "UPDATE buggies set qty_wheels=?, flag_color=?, flag_color_secondary=?, flag_pattern=?, algo=? WHERE id=? ",
                     (qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, DEFAULT_BUGGY_ID)
                 )
-                con.commit()
+                con.commit()    
                 msg = "Record successfully saved"
-        except:
+        except Exception as e:
             con.rollback()
-            msg = "error in update operation"
+            msg = f"Error in update operation: {str(e)}"
         finally:
             con.close()
         return render_template("updated.html", msg = msg)
