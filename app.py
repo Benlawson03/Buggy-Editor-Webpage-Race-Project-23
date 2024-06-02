@@ -28,14 +28,18 @@ def init_db():
             armour TEXT,
             attack TEXT,
             power_type TEXT,
+            aux_power_type TEXT,
             special TEXT,
             tyres TEXT,
-            
+            qty_tyres INTEGER,
+            qty_attacks INTEGER,
+            power_units INTEGER,
+            aux_power_units INTEGER,
             total_cost INTEGER
         )''')
         con.commit()
         
-        # Check if 'armour', 'attack', 'power_type', 'special' and 'tyres' column exists, and add it if it doesn't
+        # Check if 'armour', 'attack', 'power_type', 'aux_power_type', 'special' and 'tyres' column exists, and add it if it doesn't
         cur.execute("PRAGMA table_info(buggies)")
         columns = [column[1] for column in cur.fetchall()]
         if 'armour' not in columns:
@@ -56,6 +60,12 @@ def init_db():
             
         cur.execute("PRAGMA table_info(buggies)")
         columns = [column[1] for column in cur.fetchall()]
+        if 'aux_power_type' not in columns:
+            cur.execute("ALTER TABLE buggies ADD COLUMN aux_power_type TEXT")
+            con.commit()
+            
+        cur.execute("PRAGMA table_info(buggies)")
+        columns = [column[1] for column in cur.fetchall()]
         if 'special' not in columns:
             cur.execute("ALTER TABLE buggies ADD COLUMN special TEXT")
             con.commit()
@@ -65,26 +75,60 @@ def init_db():
         if 'tyres' not in columns:
             cur.execute("ALTER TABLE buggies ADD COLUMN tyres TEXT")
             con.commit()
+            
+        cur.execute("PRAGMA table_info(buggies)")
+        columns = [column[1] for column in cur.fetchall()]
+        if 'qty_tyres' not in columns:
+            cur.execute("ALTER TABLE buggies ADD COLUMN qty_tyres TEXT")
+            con.commit()
+            
+        cur.execute("PRAGMA table_info(buggies)")
+        columns = [column[1] for column in cur.fetchall()]
+        if 'qty_attacks' not in columns:
+            cur.execute("ALTER TABLE buggies ADD COLUMN qty_attacks TEXT")
+            con.commit()
+            
+        cur.execute("PRAGMA table_info(buggies)")
+        columns = [column[1] for column in cur.fetchall()]
+        if 'power_units' not in columns:
+            cur.execute("ALTER TABLE buggies ADD COLUMN power_units TEXT")
+            con.commit()
+
+        cur.execute("PRAGMA table_info(buggies)")
+        columns = [column[1] for column in cur.fetchall()]
+        if 'aux_power_units' not in columns:
+            cur.execute("ALTER TABLE buggies ADD COLUMN aux_power_units TEXT")
+            con.commit()
 
 
-
-def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour, attack, power_type, special, tyres):
+def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour, attack, power_type, aux_power_type, special, tyres, qty_tyres, qty_attacks, power_units, aux_power_units):
     # Define cost rules
     wheel_cost = 0    # example cost per wheel
     color_cost = 0   # example cost for flag color
     pattern_cost = 0  # example cost for flag pattern
     algo_cost = 0  # example cost for algo
-
+    qty_tyres = 0
+    power_units = 0
+    aux_power_units = 0
+    
     # Get costs from JSON data
     algo_cost = types_data["algo"][algo]["cost"]
     armour_cost = types_data["armour"][armour]["cost"]
     attack_cost = types_data["attack"][attack]["cost"]
     power_type_cost = types_data["power_type"][power_type]["cost"]
+    aux_power_type_cost = types_data["power_type"][aux_power_type]["cost"] ## Aux is only the same as power type as its the same cost
     special_cost = types_data["special"][special]["cost"]
     tyres_cost = types_data["tyres"][tyres]["cost"]
 
-    # Calculate total cost
-    total_cost = (int(qty_wheels) * wheel_cost) + color_cost + pattern_cost + algo_cost + armour_cost + attack_cost + power_type_cost + special_cost + tyres_cost
+# Calculate total cost
+    total_cost = (
+        (int(qty_wheels) * wheel_cost) +
+        (int(qty_attacks) * attack_cost) +
+        (int(tyres_cost) * int(qty_tyres)) +
+        (int(power_type_cost) * int(power_units)) +
+        (int(aux_power_type_cost) * int(aux_power_units)) +
+        color_cost + pattern_cost + algo_cost + armour_cost + special_cost
+    )
     return total_cost
 
 
@@ -122,9 +166,14 @@ def create_buggy():
         armour = request.form['armour']
         attack = request.form['attack']
         power_type = request.form['power_type']
+        aux_power_type = request.form['aux_power_type']
         special = request.form['special']
         tyres = request.form['tyres']
-
+        qty_tyres = request.form['qty_tyres']
+        qty_attacks = request.form['qty_attacks']
+        power_units = request.form['power_units']
+        aux_power_units = request.form['aux_power_units']
+        
         if not qty_wheels.isdigit():
             error_messages['error_qty_wheels'] = "Please enter an integer for the number of wheels"
         
@@ -148,19 +197,34 @@ def create_buggy():
             
         if power_type == "--option--":
             error_messages['error_power_type'] = "Power type option has been left unchosen"
+            
+        if aux_power_type == "--option--":
+             error_messages['error_aux_power_type'] = "Aux power type option has been left unchosen"
 
         if special == "--option--":
             error_messages['error_special'] = "Sepcial option has been left unchosen"
             
         if tyres == "--option--":
             error_messages['error_tyres'] = "Tyres option has been left unchosen"
+            
+        if qty_tyres == "--option--":
+            error_messages['error_qty_tyres'] = "Numbers of tyres option has been left unchosen"
+
+        if qty_attacks == "--option--":
+            error_messages['error_qty_attacks'] = "Number of attacks option has been left unchosen"
+        
+        if power_units == "--option--":
+            error_messages['error_power_units'] = "Power units option has been left unchosen"
+
+        if aux_power_units == "--option--":
+            error_messages['error_aux_power_untis'] = "Aux power units option has been left unchosen"
         
         if error_messages:
             return render_template("buggy-form.html", **error_messages, buggy=request.form)
 
         # Calculate the cost of the buggy
         try:
-            total_cost = calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour, attack, power_type, special, tyres)
+            total_cost = calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour, attack, power_type, aux_power_type, special, tyres, qty_tyres, qty_attacks, power_units, aux_power_units)
         except Exception as e:
             return render_template("buggy-form.html", error_calculation=f"Error calculating cost: {str(e)}", buggy=request.form)
 
@@ -169,9 +233,9 @@ def create_buggy():
                 cur = con.cursor()
                 cur.execute(
                     """UPDATE buggies 
-                    SET qty_wheels=?, flag_color=?, flag_color_secondary=?, flag_pattern=?, algo=?, armour=?, attack=?, power_type=?, special=?, tyres=?, total_cost=? 
+                    SET qty_wheels=?, flag_color=?, flag_color_secondary=?, flag_pattern=?, algo=?, armour=?, attack=?, power_type=?, aux_power_type=?, special=?, tyres=?, qty_tyres=?, qty_attacks=?, power_units=?, aux_power_units=?, total_cost=? 
                     WHERE id=?""",
-                    (qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour, attack, power_type, special, tyres, total_cost, DEFAULT_BUGGY_ID)
+                    (qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour, attack, power_type, aux_power_type, special, tyres, qty_tyres, qty_attacks, power_units, aux_power_units, total_cost, DEFAULT_BUGGY_ID)
                 )
                 con.commit()
                 msg = "Record successfully saved"

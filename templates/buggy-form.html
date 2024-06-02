@@ -113,6 +113,25 @@
         <option value="steam">steam</option>
         <option value="wind">wind</option>
       </select><br><br>
+
+      <!--Aux Power type-->
+      <label for="aux_power_type">Aux power type:</label>
+
+      <select name="aux_power_type" id="aux_power_type" style="font-size:20px;">
+        <option value='{{ buggy['aux_power_type']|default('--option--') }}'>{{ buggy['aux_power_type']|default('--option--') }}</option>
+        <option value="--option--">--option--</option>
+        <option value="bio">bio</option>
+        <option value="none">none</option>
+        <option value="electric">electric</option>
+        <option value="fusion">fusion</option>
+        <option value="hamster">hamster</option>
+        <option value="petrol">petrol</option>
+        <option value="rocket">rocket</option>
+        <option value="solar">solar</option>
+        <option value="thermo">thermo</option>
+        <option value="steam">steam</option>
+        <option value="wind">wind</option>
+      </select><br><br>
       <!--Special-->
       <label for="special">Special:</label>
 
