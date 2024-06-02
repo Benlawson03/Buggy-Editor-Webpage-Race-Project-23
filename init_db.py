@@ -27,6 +27,7 @@ connection.execute("""
     flag_color_secondary  VARCHAR(20),
     flag_pattern          VARCHAR(20),
     algo                  VARCHAR(20),
+    armour                VARCHAR(20),
     total_cost            INTEGER              
   )
 

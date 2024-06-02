@@ -57,6 +57,19 @@
         <option value="steady">steady</option>
         <option value="titfortat">titfortat</option>
       </select><br><br>
+      <!--Armour-->
+      <label for="armour">Armour:</label>
+      
+      <select name="armour" id="armour" style="font-size:20px;">
+        <option value='{{ buggy['armour']|default('--option--') }}'>{{ buggy['armour']|default('--option--') }}</option>
+        <option value="--option--">--option--</option>
+        <option value="buggy">buggy</option>
+        <option value="defensive">defensive</option>
+        <option value="offensive">offensive</option>
+        <option value="random">random</option>
+        <option value="steady">steady</option>
+        <option value="titfortat">titfortat</option>
+      </select><br><br>
       <!--Error handling for wheels-->
       {% if error_qty_wheels %}
       <p style="color: red;">{{error_qty_wheels}}</p>
@@ -76,6 +89,10 @@
       <!--Error handling for Algo-->
       {% if error_algo %}
       <p style="color: red;">{{ error_algo }}</p>
+      {% endif %}
+      <!--Error handling for Armour-->
+      {% if error_armour %}
+      <p style="color: red;">{{ error_armour }}</p>
       {% endif %}
       <!--Error handling for calculation-->
       {% if error_calculation %}

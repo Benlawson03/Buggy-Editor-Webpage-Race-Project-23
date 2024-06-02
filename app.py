@@ -21,23 +21,30 @@ def init_db():
             flag_color_secondary TEXT,
             flag_pattern TEXT,
             algo TEXT,
+            armour TEXT,
             total_cost INTEGER
         )''')
         con.commit()
+        
+        # Check if 'armour' column exists, and add it if it doesn't
+        cur.execute("PRAGMA table_info(buggies)")
+        columns = [column[1] for column in cur.fetchall()]
+        if 'armour' not in columns:
+            cur.execute("ALTER TABLE buggies ADD COLUMN armour TEXT")
+            con.commit()
 
-if __name__ == "__main__":
-    init_db()
 
 
-def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo):
+def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour):
     # Define cost rules
     wheel_cost = 100    # example cost per wheel
     color_cost = 5   # example cost for flag color
     pattern_cost = 20  # example cost for flag pattern
     algo_cost = 50  # example cost for algo
+    armour_cost = 10
 
     # Calculate total cost
-    total_cost = (int(qty_wheels) * wheel_cost) + color_cost + pattern_cost + algo_cost
+    total_cost = (int(qty_wheels) * wheel_cost) + color_cost + pattern_cost + algo_cost + armour_cost
     return total_cost
 
 
@@ -72,6 +79,7 @@ def create_buggy():
         flag_color_secondary = request.form['flag_color_secondary']
         flag_pattern = request.form['flag_pattern']
         algo = request.form['algo']
+        armour = request.form['armour']
 
         if not qty_wheels.isdigit():
             error_messages['error_qty_wheels'] = "Please enter an integer for the number of wheels"
@@ -87,13 +95,16 @@ def create_buggy():
         
         if algo == "--option--":
             error_messages['error_algo'] = "Algo option has been left unchosen"
+            
+        if armour == "--option--":
+            error_messages['error_armour'] = "Armour option has been left unchosen"
         
         if error_messages:
             return render_template("buggy-form.html", **error_messages, buggy=request.form)
 
         # Calculate the cost of the buggy
         try:
-            total_cost = calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo)
+            total_cost = calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour)
         except Exception as e:
             return render_template("buggy-form.html", error_calculation=f"Error calculating cost: {str(e)}", buggy=request.form)
 
@@ -102,9 +113,9 @@ def create_buggy():
                 cur = con.cursor()
                 cur.execute(
                     """UPDATE buggies 
-                    SET qty_wheels=?, flag_color=?, flag_color_secondary=?, flag_pattern=?, algo=?, total_cost=? 
+                    SET qty_wheels=?, flag_color=?, flag_color_secondary=?, flag_pattern=?, algo=?, armour=?, total_cost=? 
                     WHERE id=?""",
-                    (qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, total_cost, DEFAULT_BUGGY_ID)
+                    (qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour, total_cost, DEFAULT_BUGGY_ID)
                 )
                 con.commit()
                 msg = "Record successfully saved"
@@ -184,5 +195,6 @@ def summary():
             return jsonify({})
 
 if __name__ == '__main__':
+    init_db()
     alloc_port = os.environ.get('CS1999_PORT') or 5001
     app.run(debug=True, host="0.0.0.0", port=alloc_port)
