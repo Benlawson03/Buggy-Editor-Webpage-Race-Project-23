@@ -11,6 +11,10 @@ DATABASE_FILE = "database.db"
 DEFAULT_BUGGY_ID = "1"
 BUGGY_RACE_SERVER_URL = "https://rhul.buggyrace.net"
 
+# Load JSON data
+with open('types.json', 'r') as file:
+    types_data = json.load(file)
+
 def init_db():
     with sql.connect(DATABASE_FILE) as con:
         cur = con.cursor()
@@ -37,11 +41,15 @@ def init_db():
 
 def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour):
     # Define cost rules
-    wheel_cost = 100    # example cost per wheel
-    color_cost = 5   # example cost for flag color
-    pattern_cost = 20  # example cost for flag pattern
-    algo_cost = 50  # example cost for algo
-    armour_cost = 10
+    wheel_cost = 0    # example cost per wheel
+    color_cost = 0   # example cost for flag color
+    pattern_cost = 0  # example cost for flag pattern
+    algo_cost = 0  # example cost for algo
+
+    # Get costs from JSON data
+    algo_cost = types_data["algo"][algo]["cost"]
+    armour_cost = types_data["armour"][armour]["cost"]
+
 
     # Calculate total cost
     total_cost = (int(qty_wheels) * wheel_cost) + color_cost + pattern_cost + algo_cost + armour_cost
