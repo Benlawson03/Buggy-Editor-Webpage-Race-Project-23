@@ -70,6 +70,60 @@
         <option value="titanium">titanium</option>
         <option value="wood">wood</option>
       </select><br><br>
+      <!--Attack-->
+      <label for="attack">Attack:</label>
+
+      <select name="attack" id="attack" style="font-size:20px;">
+        <option value='{{ buggy['attack']|default('--option--') }}'>{{ buggy['attack']|default('--option--') }}</option>
+        <option value="--option--">--option--</option>
+        <option value="biohazard">biohazard</option>
+        <option value="none">none</option>
+        <option value="charge">charge</option>
+        <option value="flame">flame</option>
+        <option value="spike">spike</option>
+      </select><br><br>
+      <!--Power type-->
+      <label for="power_type">Power type:</label>
+
+      <select name="power_type" id="power_type" style="font-size:20px;">
+        <option value='{{ buggy['power_type']|default('--option--') }}'>{{ buggy['power_type']|default('--option--') }}</option>
+        <option value="--option--">--option--</option>
+        <option value="bio">bio</option>
+        <option value="none">none</option>
+        <option value="electric">electric</option>
+        <option value="fusion">fusion</option>
+        <option value="hamster">hamster</option>
+        <option value="petrol">petrol</option>
+        <option value="rocket">rocket</option>
+        <option value="solar">solar</option>
+        <option value="thermo">thermo</option>
+        <option value="steam">steam</option>
+        <option value="wind">wind</option>
+      </select><br><br>
+      <!--Special-->
+      <label for="special">Special:</label>
+
+      <select name="special" id="special" style="font-size:20px;">
+        <option value='{{ buggy['special']|default('--option--') }}'>{{ buggy['special']|default('--option--') }}</option>
+        <option value="--option--">--option--</option>
+        <option value="antibiotic">antibiotic</option>
+        <option value="banging">banging</option>
+        <option value="fireproof">fireproof</option>
+        <option value="hamster_booster">hamster_booster</option>
+        <option value="insulated">insulated</option>
+      </select><br><br>
+      <!--Attack-->
+      <label for="tyres">Tyres:</label>
+
+      <select name="tyres" id="tyres" style="font-size:20px;">
+        <option value='{{ buggy['tyres']|default('--option--') }}'>{{ buggy['tyres']|default('--option--') }}</option>
+        <option value="--option--">--option--</option>
+        <option value="knobbly">knobbly</option>
+        <option value="maglev">maglev</option>
+        <option value="reactive">reactive</option>
+        <option value="slick">slick</option>
+        <option value="steelband">steelband</option>
+      </select><br><br>
       <!--Error handling for wheels-->
       {% if error_qty_wheels %}
       <p style="color: red;">{{error_qty_wheels}}</p>
@@ -93,6 +147,22 @@
       <!--Error handling for Armour-->
       {% if error_armour %}
       <p style="color: red;">{{ error_armour }}</p>
+      {% endif %}
+      <!--Error handling for Attack-->
+      {% if error_attack %}
+      <p style="color: red;">{{ error_attack }}</p>
+      {% endif %}
+      <!--Error handling for Power Type-->
+      {% if error_power_type %}
+      <p style="color: red;">{{ error_power_type }}</p>
+      {% endif %}
+      <!--Error handling for Special-->
+      {% if error_special %}
+      <p style="color: red;">{{ error_special }}</p>
+      {% endif %}
+      <!--Error handling for Tyres-->
+      {% if error_tyres %}
+      <p style="color: red;">{{ error_tyres }}</p>
       {% endif %}
       <!--Error handling for calculation-->
       {% if error_calculation %}

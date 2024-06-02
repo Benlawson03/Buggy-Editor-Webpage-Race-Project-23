@@ -28,6 +28,10 @@ connection.execute("""
     flag_pattern          VARCHAR(20),
     algo                  VARCHAR(20),
     armour                VARCHAR(20),
+    attack                VARCHAR(20),
+    power_type            VARCHAR(20),
+    special               VARCHAR(20),
+    tyres                 VARCHAR(20),
     total_cost            INTEGER              
   )
 
