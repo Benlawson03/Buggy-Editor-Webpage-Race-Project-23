@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import os
 import sqlite3 as sql
 import json
-
+os.environ.get('FLASK_DEBUG')
 # app - The flask application where all the magical things are configured.
 app = Flask(__name__)
 
@@ -10,11 +10,11 @@ app = Flask(__name__)
 DATABASE_FILE = "database.db"
 DEFAULT_BUGGY_ID = "1"
 BUGGY_RACE_SERVER_URL = "https://rhul.buggyrace.net"
+RACE_COST_LIMIT = 350 # Cost limit
 
 # Load JSON data
 with open('types.json', 'r') as file:
     types_data = json.load(file)
-
 def init_db():
     with sql.connect(DATABASE_FILE) as con:
         cur = con.cursor()
@@ -111,6 +111,7 @@ def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, a
     power_units = 0
     aux_power_units = 0
     
+    
     # Get costs from JSON data
     algo_cost = types_data["algo"][algo]["cost"]
     armour_cost = types_data["armour"][armour]["cost"]
@@ -174,8 +175,12 @@ def create_buggy():
         power_units = request.form['power_units']
         aux_power_units = request.form['aux_power_units']
         
+        print(f"Debug - Form Values: qty_wheels={qty_wheels}, flag_color={flag_color}, flag_color_secondary={flag_color_secondary}, flag_pattern={flag_pattern}, algo={algo}, armour={armour}, attack={attack}, power_type={power_type}, aux_power_type={aux_power_type}, special={special}, tyres={tyres}, qty_tyres={qty_tyres}, qty_attacks={qty_attacks}, power_units={power_units}, aux_power_units={aux_power_units}")
+        
         if not qty_wheels.isdigit():
             error_messages['error_qty_wheels'] = "Please enter an integer for the number of wheels"
+        elif int(qty_wheels) % 2 != 0:
+            error_messages['error_qty_wheels'] = "The number of wheels must be even"
         
         if flag_color == "--option--":
             error_messages['error_flag_color'] = "Flag colour option has been left unchosen"
@@ -185,6 +190,8 @@ def create_buggy():
         
         if flag_pattern == "--option--":
             error_messages['error_flag_pattern'] = "Flag pattern option has been left unchosen"
+        elif flag_pattern != "plain" and flag_color == flag_color_secondary:
+            error_messages['error_flag_pattern'] = "Primary and secondary flag colors must be different unless the pattern is 'plain'."
         
         if algo == "--option--":
             error_messages['error_algo'] = "Algo option has been left unchosen"
@@ -209,6 +216,11 @@ def create_buggy():
             
         if qty_tyres == "--option--":
             error_messages['error_qty_tyres'] = "Numbers of tyres option has been left unchosen"
+        elif int(qty_tyres) % 2 != 0:
+            error_messages['error_qty_tyres'] = "The number of tyres must be even"
+        elif int(qty_tyres) < int(qty_wheels):
+            error_messages['error_qty_tyres1'] = "Number of tyres cannot be less than the number of wheels."
+
 
         if qty_attacks == "--option--":
             error_messages['error_qty_attacks'] = "Number of attacks option has been left unchosen"
@@ -225,8 +237,13 @@ def create_buggy():
         # Calculate the cost of the buggy
         try:
             total_cost = calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour, attack, power_type, aux_power_type, special, tyres, qty_tyres, qty_attacks, power_units, aux_power_units)
+            print(f"Debug - Total Cost: {total_cost}")
         except Exception as e:
             return render_template("buggy-form.html", error_calculation=f"Error calculating cost: {str(e)}", buggy=request.form)
+
+        if total_cost > RACE_COST_LIMIT:
+            error_messages['error_total_cost'] = f"The total cost of {total_cost} exceeds the race limit of {RACE_COST_LIMIT}."
+            return render_template("buggy-form.html", **error_messages, buggy=request.form)
 
         try:
             with sql.connect(DATABASE_FILE) as con:
@@ -316,5 +333,7 @@ def summary():
 
 if __name__ == '__main__':
     init_db()
-    alloc_port = os.environ.get('CS1999_PORT') or 5001
-    app.run(debug=True, host="0.0.0.0", port=alloc_port)
+    alloc_port = os.environ.get('CS1999_PORT') or 5001 # Debug mode is off when uncommented
+    app.run(debug=True, host="0.0.0.0", port=alloc_port) # Debug mode is off when uncommented
+    # debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() in ['true'] # export FLASK_DEBUG=False/True
+    # app.run(debug=debug_mode) # false if debug mode is off, true for on

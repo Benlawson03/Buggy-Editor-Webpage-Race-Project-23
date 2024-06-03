@@ -102,7 +102,6 @@
         <option value='{{ buggy['power_type']|default('--option--') }}'>{{ buggy['power_type']|default('--option--') }}</option>
         <option value="--option--">--option--</option>
         <option value="bio">bio</option>
-        <option value="none">none</option>
         <option value="electric">electric</option>
         <option value="fusion">fusion</option>
         <option value="hamster">hamster</option>
@@ -172,6 +171,9 @@
       {% if error_flag_pattern %}
       <p style="color: red;">{{ error_flag_pattern }}</p>
       {% endif %}
+      {% if error_flag_colors %}
+      <p style="color: red;">{{ error_flag_colors }}</p>
+      {% endif %} 
       <!--Error handling for Algo-->
       {% if error_algo %}
       <p style="color: red;">{{ error_algo }}</p>
@@ -200,8 +202,27 @@
       {% if error_calculation %}
       <p style="color: red;">{{ error_calculation }}</p>
       {% endif %}
-    <input type="submit" class="button">
+      <!--Error handling for Total cost-->
+      {% if error_total_cost %}
+      <p style="color: red;">{{ error_total_cost }}</p>
+      {% endif %}
+      <!--Error handling for number of wheels (even)-->
+      {% if error_qty_wheels %}
+      <p style="color: red;">{{ error_qty_wheels }}</p>
+      {% endif %}
+      <!--Error handling for number of tyres (even)-->
+      {% if error_qty_tyres %}
+      <p style="color: red;">{{ error_qty_tyres }}</p>
+      {% endif %}
+      <!-- Number of tyres must be greater than wheels-->
+      {% if error_qty_tyres1 %}
+      <p style="color: red;">{{ error_qty_tyres1 }}</p>
+      {% endif %}
+
+      <input type="submit" class="button">
   </form>
+
+
 
   <p>
     <a href="/" class="button">home</a>
