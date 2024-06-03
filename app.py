@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import os
 import sqlite3 as sql
 import json
+import random
 os.environ.get('FLASK_DEBUG')
 # app - The flask application where all the magical things are configured.
 app = Flask(__name__)
@@ -101,6 +102,34 @@ def init_db():
             con.commit()
 
 
+def get_default_buggy(): # Autofill task
+    flag_colors = ["green", "red", "blue", "white"]
+    flag_color = random.choice(flag_colors)
+    flag_colors.remove(flag_color)
+    flag_color_secondary = random.choice(flag_colors)
+    qty_wheels = random.randint(2, 8)
+    qty_tyres = random.randint(qty_wheels, 8)  # Ensure that qty_tyres is greater than or equal to qty_wheels
+    default_buggy = {
+        "qty_wheels": qty_wheels,  # Random number of wheels between 2 and 8
+        "flag_color": flag_color,
+        "flag_color_secondary": flag_color_secondary,
+        "flag_pattern": random.choice(list(types_data["flag_pattern"].keys())),
+        "algo": random.choice(list(types_data["algo"].keys())),
+        "armour": random.choice(list(types_data["armour"].keys())),
+        "attack": random.choice(list(types_data["attack"].keys())),
+        "power_type": random.choice(list(types_data["power_type"].keys())),
+        "aux_power_type": random.choice(list(types_data["power_type"].keys())),
+        "special": random.choice(list(types_data["special"].keys())),
+        "tyres": random.choice(list(types_data["tyres"].keys())),
+        "qty_tyres": qty_tyres,  # Random number of tyres between qty_wheels and 8
+        "qty_attacks": random.randint(0, 4),  # Random number of attacks between 0 and 4
+        "power_units": random.randint(1, 5),  # Random number of power units between 1 and 5
+        "aux_power_units": random.randint(0, 5)  # Random number of aux power units between 0 and 5
+    }
+    return default_buggy
+
+
+
 def calculate_cost(qty_wheels, flag_color, flag_color_secondary, flag_pattern, algo, armour, attack, power_type, aux_power_type, special, tyres, qty_tyres, qty_attacks, power_units, aux_power_units):
     # Define cost rules
     wheel_cost = 0    # example cost per wheel
@@ -158,81 +187,87 @@ def create_buggy():
             else:
                 return render_template("buggy-form.html", buggy={})
     elif request.method == 'POST':
-        error_messages = {}
-        qty_wheels = request.form['qty_wheels'].strip()
-        flag_color = request.form['flag_color']
-        flag_color_secondary = request.form['flag_color_secondary']
-        flag_pattern = request.form['flag_pattern']
-        algo = request.form['algo']
-        armour = request.form['armour']
-        attack = request.form['attack']
-        power_type = request.form['power_type']
-        aux_power_type = request.form['aux_power_type']
-        special = request.form['special']
-        tyres = request.form['tyres']
-        qty_tyres = request.form['qty_tyres']
-        qty_attacks = request.form['qty_attacks']
-        power_units = request.form['power_units']
-        aux_power_units = request.form['aux_power_units']
-        
-        print(f"Debug - Form Values: qty_wheels={qty_wheels}, flag_color={flag_color}, flag_color_secondary={flag_color_secondary}, flag_pattern={flag_pattern}, algo={algo}, armour={armour}, attack={attack}, power_type={power_type}, aux_power_type={aux_power_type}, special={special}, tyres={tyres}, qty_tyres={qty_tyres}, qty_attacks={qty_attacks}, power_units={power_units}, aux_power_units={aux_power_units}")
-        
-        if not qty_wheels.isdigit():
-            error_messages['error_qty_wheels'] = "Please enter an integer for the number of wheels"
-        elif int(qty_wheels) % 2 != 0:
-            error_messages['error_qty_wheels'] = "The number of wheels must be even"
-        
-        if flag_color == "--option--":
-            error_messages['error_flag_color'] = "Flag colour option has been left unchosen"
-        
-        if flag_color_secondary == "--option--":
-            error_messages['error_secondary_flag_color'] = "Secondary flag colour option has been left unchosen"
-        
-        if flag_pattern == "--option--":
-            error_messages['error_flag_pattern'] = "Flag pattern option has been left unchosen"
-        elif flag_pattern != "plain" and flag_color == flag_color_secondary:
-            error_messages['error_flag_pattern'] = "Primary and secondary flag colors must be different unless the pattern is 'plain'."
-        
-        if algo == "--option--":
-            error_messages['error_algo'] = "Algo option has been left unchosen"
+        action = request.form.get("action")
+        if action == "autofill":
+            default_buggy = get_default_buggy()
+            return render_template("buggy-form.html", buggy=default_buggy)
+        elif action == "submit":
+            # Existing form processing logic
+            error_messages = {}
+            qty_wheels = request.form['qty_wheels'].strip()
+            flag_color = request.form['flag_color']
+            flag_color_secondary = request.form['flag_color_secondary']
+            flag_pattern = request.form['flag_pattern']
+            algo = request.form['algo']
+            armour = request.form['armour']
+            attack = request.form['attack']
+            power_type = request.form['power_type']
+            aux_power_type = request.form['aux_power_type']
+            special = request.form['special']
+            tyres = request.form['tyres']
+            qty_tyres = request.form['qty_tyres']
+            qty_attacks = request.form['qty_attacks']
+            power_units = request.form['power_units']
+            aux_power_units = request.form['aux_power_units']
             
-        if armour == "--option--":
-            error_messages['error_armour'] = "Armour option has been left unchosen"
+            print(f"Debug - Form Values: qty_wheels={qty_wheels}, flag_color={flag_color}, flag_color_secondary={flag_color_secondary}, flag_pattern={flag_pattern}, algo={algo}, armour={armour}, attack={attack}, power_type={power_type}, aux_power_type={aux_power_type}, special={special}, tyres={tyres}, qty_tyres={qty_tyres}, qty_attacks={qty_attacks}, power_units={power_units}, aux_power_units={aux_power_units}")
             
-        if attack == "--option--":
-            error_messages['error_attack'] = "Attack option has been left unchosen"
+            if not qty_wheels.isdigit():
+                error_messages['error_qty_wheels'] = "Please enter an integer for the number of wheels"
+            elif int(qty_wheels) % 2 != 0:
+                error_messages['error_qty_wheels'] = "The number of wheels must be even"
             
-        if power_type == "--option--":
-            error_messages['error_power_type'] = "Power type option has been left unchosen"
+            if flag_color == "--option--":
+                error_messages['error_flag_color'] = "Flag colour option has been left unchosen"
             
-        if aux_power_type == "--option--":
-             error_messages['error_aux_power_type'] = "Aux power type option has been left unchosen"
+            if flag_color_secondary == "--option--":
+                error_messages['error_secondary_flag_color'] = "Secondary flag colour option has been left unchosen"
+            
+            if flag_pattern == "--option--":
+                error_messages['error_flag_pattern'] = "Flag pattern option has been left unchosen"
+            elif flag_pattern != "plain" and flag_color == flag_color_secondary:
+                error_messages['error_flag_pattern'] = "Primary and secondary flag colors must be different unless the pattern is 'plain'."
+            
+            if algo == "--option--":
+                error_messages['error_algo'] = "Algo option has been left unchosen"
+                
+            if armour == "--option--":
+                error_messages['error_armour'] = "Armour option has been left unchosen"
+                
+            if attack == "--option--":
+                error_messages['error_attack'] = "Attack option has been left unchosen"
+                
+            if power_type == "--option--":
+                error_messages['error_power_type'] = "Power type option has been left unchosen"
+                
+            if aux_power_type == "--option--":
+                error_messages['error_aux_power_type'] = "Aux power type option has been left unchosen"
 
-        if special == "--option--":
-            error_messages['error_special'] = "Sepcial option has been left unchosen"
+            if special == "--option--":
+                error_messages['error_special'] = "Sepcial option has been left unchosen"
+                
+            if tyres == "--option--":
+                error_messages['error_tyres'] = "Tyres option has been left unchosen"
+                
+            if qty_tyres == "--option--":
+                error_messages['error_qty_tyres'] = "Numbers of tyres option has been left unchosen"
+            elif int(qty_tyres) % 2 != 0:
+                error_messages['error_qty_tyres'] = "The number of tyres must be even"
+            elif int(qty_tyres) < int(qty_wheels):
+                error_messages['error_qty_tyres1'] = "Number of tyres cannot be less than the number of wheels."
+
+
+            if qty_attacks == "--option--":
+                error_messages['error_qty_attacks'] = "Number of attacks option has been left unchosen"
             
-        if tyres == "--option--":
-            error_messages['error_tyres'] = "Tyres option has been left unchosen"
+            if power_units == "--option--":
+                error_messages['error_power_units'] = "Power units option has been left unchosen"
+
+            if aux_power_units == "--option--":
+                error_messages['error_aux_power_untis'] = "Aux power units option has been left unchosen"
             
-        if qty_tyres == "--option--":
-            error_messages['error_qty_tyres'] = "Numbers of tyres option has been left unchosen"
-        elif int(qty_tyres) % 2 != 0:
-            error_messages['error_qty_tyres'] = "The number of tyres must be even"
-        elif int(qty_tyres) < int(qty_wheels):
-            error_messages['error_qty_tyres1'] = "Number of tyres cannot be less than the number of wheels."
-
-
-        if qty_attacks == "--option--":
-            error_messages['error_qty_attacks'] = "Number of attacks option has been left unchosen"
-        
-        if power_units == "--option--":
-            error_messages['error_power_units'] = "Power units option has been left unchosen"
-
-        if aux_power_units == "--option--":
-            error_messages['error_aux_power_untis'] = "Aux power units option has been left unchosen"
-        
-        if error_messages:
-            return render_template("buggy-form.html", **error_messages, buggy=request.form)
+            if error_messages:
+                return render_template("buggy-form.html", **error_messages, buggy=request.form)
 
         # Calculate the cost of the buggy
         try:
